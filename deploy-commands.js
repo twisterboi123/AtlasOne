@@ -17,7 +17,9 @@ async function collect(){
   const data = [];
   for(const f of files){
     if(!f.endsWith('.js')) continue;
-    const mod = await import(path.join(commandsDir, f));
+    const filePath = path.join(commandsDir, f);
+    const fileUrl = new URL(`file:///${filePath.replace(/\\/g, '/')}`);
+    const mod = await import(fileUrl.href);
     const cmd = mod.default;
     if(cmd?.data){
       data.push(cmd.data.toJSON());

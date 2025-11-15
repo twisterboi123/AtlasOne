@@ -31,7 +31,9 @@ async function loadCommands(){
   const files = await fs.readdir(commandsPath);
   for(const file of files){
     if(!file.endsWith('.js')) continue;
-    const mod = await import(path.join(commandsPath, file));
+    const filePath = path.join(commandsPath, file);
+    const fileUrl = new URL(`file:///${filePath.replace(/\\/g, '/')}`);
+    const mod = await import(fileUrl.href);
     const command = mod.default;
     if(command?.data?.name){
       client.commands.set(command.data.name, command);
@@ -44,7 +46,9 @@ async function loadEvents(){
   const files = await fs.readdir(eventsPath);
   for(const file of files){
     if(!file.endsWith('.js')) continue;
-    const mod = await import(path.join(eventsPath, file));
+    const filePath = path.join(eventsPath, file);
+    const fileUrl = new URL(`file:///${filePath.replace(/\\/g, '/')}`);
+    const mod = await import(fileUrl.href);
     const ev = mod.default;
     if(ev?.name && typeof ev.execute === 'function'){
       if(ev.once){
@@ -89,14 +93,17 @@ function scheduleReminder(rem){
 
 // Events moved to /events/*.js
 
-await loadCommands();
-await loadEvents();
+(async () => {
+  await loadCommands();
+  await loadEvents();
+  await restoreData();
 
-const token = process.env.DISCORD_TOKEN; // set this env var or use .env with dotenv
-if(!token){
-  console.error('Missing DISCORD_TOKEN env variable.');
-  process.exit(1);
-}
-client.login(token);
+  const token = process.env.DISCORD_TOKEN;
+  if(!token){
+    console.error('Missing DISCORD_TOKEN env variable.');
+    process.exit(1);
+  }
+  client.login(token);
+})();
 
 export { scheduleReminder, parseDuration, formatDuration };

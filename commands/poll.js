@@ -3,11 +3,17 @@ import { readJSON, writeJSON } from '../utils/jsonStore.js';
 import { log } from '../utils/logger.js';
 
 function buildButtons(poll){
-  const row = new ActionRowBuilder();
+  const rows = [];
+  let currentRow = new ActionRowBuilder();
   poll.options.forEach((opt, idx)=>{
-    row.addComponents(new ButtonBuilder().setCustomId(`poll_vote_${poll.id}_${idx}`).setLabel(opt).setStyle(ButtonStyle.Primary));
+    if(currentRow.components.length >= 5){
+      rows.push(currentRow);
+      currentRow = new ActionRowBuilder();
+    }
+    currentRow.addComponents(new ButtonBuilder().setCustomId(`poll_vote_${poll.id}_${idx}`).setLabel(opt).setStyle(ButtonStyle.Primary));
   });
-  return [row];
+  if(currentRow.components.length > 0) rows.push(currentRow);
+  return rows;
 }
 
 export default {

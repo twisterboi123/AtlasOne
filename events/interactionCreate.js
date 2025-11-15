@@ -10,11 +10,12 @@ export default {
       try {
         await command.execute(interaction, client);
       } catch(e){
-        console.error(e);
+        console.error(`Error in command ${interaction.commandName}:`, e);
+        const errorMsg = { content: `Error: ${e.message}`, ephemeral: true };
         if(interaction.replied || interaction.deferred){
-          interaction.followUp({ content: 'Error executing command.', ephemeral: true });
+          interaction.followUp(errorMsg);
         } else {
-          interaction.reply({ content: 'Error executing command.', ephemeral: true });
+          interaction.reply(errorMsg);
         }
       }
     } else if(interaction.isButton()){
