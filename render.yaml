@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: atlasone-bot
+    env: node
+    plan: free
+    branch: master
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: DISCORD_TOKEN
+        sync: false
+      - key: DISCORD_APP_ID
+        sync: false
