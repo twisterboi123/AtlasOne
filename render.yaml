@@ -1,13 +1,16 @@
 services:
-  - type: web
+  - type: worker
     name: atlasone-bot
     env: node
     plan: free
     branch: master
+    autoDeploy: true
     buildCommand: npm install
     startCommand: npm start
     envVars:
       - key: DISCORD_TOKEN
         sync: false
       - key: DISCORD_APP_ID
+        sync: false
+      - key: BOT_OWNER_ID
         sync: false
