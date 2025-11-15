@@ -36,21 +36,20 @@ export default {
       const question = interaction.options.getString('question');
       const optionsStr = interaction.options.getString('options');
       const opts = optionsStr.split(',').map(s=>s.trim()).filter(Boolean);
-      if(opts.length < 2 || opts.length > 10) return interaction.reply({ content: 'Provide 2-10 options.', ephemeral: true });
+      if(opts.length < 2 || opts.length > 10) return interaction.reply({ content: 'Provide 2-10 options.', flags: 64 });
       const id = polls.length ? Math.max(...polls.map(p=>p.id)) + 1 : 1;
       const poll = { id, question, options: opts, creatorId: interaction.user.id, votes: {}, closed:false };
       polls.push(poll);
       await writeJSON('polls.json', polls);
-      await interaction.reply({ content: `Poll #${id} created.` });
-      await interaction.channel.send({ content: `Poll #${id}: **${question}**`, components: buildButtons(poll) });
+      const pollMsg = await interaction.reply({ content: `Poll #${id}: **${question}**`, components: buildButtons(poll), fetchReply: true });
       await log('poll.create', { pollId: id, userId: interaction.user.id });
       return;
     }
     if(sub === 'close'){
       const id = interaction.options.getInteger('id');
       const poll = polls.find(p=>p.id === id);
-      if(!poll) return interaction.reply({ content: 'Poll not found.', ephemeral: true });
-      if(poll.closed) return interaction.reply({ content: 'Already closed.', ephemeral: true });
+      if(!poll) return interaction.reply({ content: 'Poll not found.', flags: 64 });
+      if(poll.closed) return interaction.reply({ content: 'Already closed.', flags: 64 });
       poll.closed = true;
       await writeJSON('polls.json', polls);
       const counts = {};

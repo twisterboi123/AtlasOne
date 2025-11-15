@@ -22,18 +22,18 @@ export default {
     const sub = interaction.options.getSubcommand();
     const faqs = await readJSON('faq.json', []);
     if(sub === 'add'){
-      if(!interaction.member.permissions.has(PermissionFlagsBits.ManageGuild)){
-        return interaction.reply({ content: 'You need Manage Guild to add FAQs.', ephemeral: true });
+      if(!interaction.memberPermissions?.has(PermissionFlagsBits.ManageGuild)){
+        return interaction.reply({ content: 'You need Manage Guild to add FAQs.', flags: 64 });
       }
       const question = interaction.options.getString('question');
       const answer = interaction.options.getString('answer');
       faqs.push({ id: faqs.length+1, question, answer });
       await writeJSON('faq.json', faqs);
       await log('faq.add', { userId: interaction.user.id, question });
-      return interaction.reply({ content: 'FAQ added.', ephemeral: true });
+      return interaction.reply({ content: 'FAQ added.', flags: 64 });
     }
     if(sub === 'list'){
-      if(!faqs.length) return interaction.reply({ content: 'No FAQs yet.', ephemeral: true });
+      if(!faqs.length) return interaction.reply({ content: 'No FAQs yet.', flags: 64 });
       const embed = new EmbedBuilder().setTitle('FAQs').setColor(0x5865F2);
       for(const f of faqs){
         embed.addFields({ name: `${f.id}. ${f.question}`, value: f.answer });
@@ -43,7 +43,7 @@ export default {
     if(sub === 'get'){
       const q = interaction.options.getString('query').toLowerCase();
       const found = faqs.find(f=>f.question.toLowerCase().includes(q));
-      if(!found) return interaction.reply({ content: 'No match found.', ephemeral: true });
+      if(!found) return interaction.reply({ content: 'No match found.', flags: 64 });
       return interaction.reply({ embeds:[ new EmbedBuilder().setTitle(found.question).setDescription(found.answer).setColor(0x5865F2) ] });
     }
   }

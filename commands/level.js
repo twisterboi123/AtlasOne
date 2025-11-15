@@ -18,7 +18,7 @@ export default {
       const entries = Object.entries(levels).map(([id,v])=>({ id, xp:v.xp, level:v.level }));
       entries.sort((a,b)=>b.xp - a.xp);
       const top = entries.slice(0,10);
-      if(!top.length) return interaction.reply({ content: 'No data.', ephemeral: true });
+      if(!top.length) return interaction.reply({ content: 'No data.', flags: 64 });
       const lines = top.map((e,i)=>`#${i+1} <@${e.id}> — L${e.level} (${e.xp} XP)`);
       return interaction.reply({ content: lines.join('\n'), ephemeral: false });
     }

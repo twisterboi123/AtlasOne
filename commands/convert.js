@@ -14,7 +14,7 @@ export default {
       const from = interaction.options.getString('from');
       const to = interaction.options.getString('to');
       const { result, error } = convertUnits(value, from, to);
-      if(error) return interaction.reply({ content: `Error: ${error}`, ephemeral: true });
+      if(error) return interaction.reply({ content: `Error: ${error}`, flags: 64 });
       return interaction.reply({ content: `${value} ${from} = ${result} ${to}`, ephemeral: false });
     }
   }

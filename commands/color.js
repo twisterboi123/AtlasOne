@@ -10,7 +10,7 @@ export default {
     if(sub === 'info'){
       let hex = interaction.options.getString('hex');
       const parsed = parseHex(hex);
-      if(!parsed) return interaction.reply({ content: 'Invalid hex format.', ephemeral: true });
+      if(!parsed) return interaction.reply({ content: 'Invalid hex format.', flags: 64 });
       const { r,g,b, decimal } = parsed;
       const embed = new EmbedBuilder()
         .setTitle(`#${hex.replace(/^#/,'').toUpperCase()}`)

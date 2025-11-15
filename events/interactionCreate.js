@@ -11,11 +11,11 @@ export default {
         await command.execute(interaction, client);
       } catch(e){
         console.error(`Error in command ${interaction.commandName}:`, e);
-        const errorMsg = { content: `Error: ${e.message}`, ephemeral: true };
+        const errorMsg = { content: `Error: ${e.message}`, flags: 64 };
         if(interaction.replied || interaction.deferred){
-          interaction.followUp(errorMsg);
+          interaction.followUp(errorMsg).catch(()=>{});
         } else {
-          interaction.reply(errorMsg);
+          interaction.reply(errorMsg).catch(()=>{});
         }
       }
     } else if(interaction.isButton()){
@@ -24,12 +24,12 @@ export default {
         const pollId = parseInt(idMatch[1],10);
         const optIndex = parseInt(idMatch[2],10);
         const poll = client.context.polls.find(p=>p.id === pollId);
-        if(!poll) return interaction.reply({ content: 'Poll not found.', ephemeral: true });
-        if(poll.closed) return interaction.reply({ content: 'Poll closed.', ephemeral: true });
+        if(!poll) return interaction.reply({ content: 'Poll not found.', flags: 64 });
+        if(poll.closed) return interaction.reply({ content: 'Poll closed.', flags: 64 });
         poll.votes = poll.votes || {};
         poll.votes[interaction.user.id] = optIndex;
         await writeJSON('polls.json', client.context.polls);
-        await interaction.reply({ content: `Vote recorded for option ${optIndex+1}.`, ephemeral: true });
+        await interaction.reply({ content: `Vote recorded for option ${optIndex+1}.`, flags: 64 });
         await log('poll.vote', { pollId, userId: interaction.user.id, optionIndex: optIndex });
       }
     }

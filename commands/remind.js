@@ -27,29 +27,29 @@ export default {
       const msg = interaction.options.getString('message');
       const timeStr = interaction.options.getString('time');
       const ms = parseDuration(timeStr);
-      if(!ms) return interaction.reply({ content: 'Invalid time format.', ephemeral: true });
+      if(!ms) return interaction.reply({ content: 'Invalid time format.', flags: 64 });
       const id = reminders.length ? Math.max(...reminders.map(r=>r.id)) + 1 : 1;
       const rem = { id, userId: interaction.user.id, message: msg, time: timeStr, timestampDue: Date.now() + ms };
       reminders.push(rem);
       await writeJSON('reminders.json', reminders);
       scheduleReminder(rem);
       await log('reminder.set', { userId: interaction.user.id, id });
-      return interaction.reply({ content: `Reminder set (id ${id}) in ${formatDuration(ms)}.`, ephemeral: true });
+      return interaction.reply({ content: `Reminder set (id ${id}) in ${formatDuration(ms)}.`, flags: 64 });
     }
     if(sub === 'list'){
       const mine = reminders.filter(r=>r.userId === interaction.user.id);
-      if(!mine.length) return interaction.reply({ content: 'No reminders.', ephemeral: true });
+      if(!mine.length) return interaction.reply({ content: 'No reminders.', flags: 64 });
       const lines = mine.map(r=>`ID ${r.id}: in ${formatDuration(r.timestampDue - Date.now())} - ${r.message}`);
-      return interaction.reply({ content: lines.join('\n'), ephemeral: true });
+      return interaction.reply({ content: lines.join('\n'), flags: 64 });
     }
     if(sub === 'cancel'){
       const id = interaction.options.getInteger('id');
       const rem = reminders.find(r=>r.id === id && r.userId === interaction.user.id);
-      if(!rem) return interaction.reply({ content: 'Reminder not found.', ephemeral: true });
+      if(!rem) return interaction.reply({ content: 'Reminder not found.', flags: 64 });
       reminders = reminders.filter(r=>r !== rem);
       await writeJSON('reminders.json', reminders);
       await log('reminder.cancel', { userId: interaction.user.id, id });
-      return interaction.reply({ content: 'Reminder cancelled.', ephemeral: true });
+      return interaction.reply({ content: 'Reminder cancelled.', flags: 64 });
     }
   }
 };

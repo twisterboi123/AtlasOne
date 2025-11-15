@@ -17,27 +17,27 @@ export default {
     if(sub === 'add'){
       const name = interaction.options.getString('name').toLowerCase();
       const content = interaction.options.getString('content');
-      if(tags[name]) return interaction.reply({ content: 'Tag exists.', ephemeral: true });
+      if(tags[name]) return interaction.reply({ content: 'Tag exists.', flags: 64 });
       tags[name] = content;
       await writeJSON('tags.json', tags);
-      return interaction.reply({ content: 'Tag added.', ephemeral: true });
+      return interaction.reply({ content: 'Tag added.', flags: 64 });
     }
     if(sub === 'get'){
       const name = interaction.options.getString('name').toLowerCase();
-      if(!tags[name]) return interaction.reply({ content: 'Tag not found.', ephemeral: true });
+      if(!tags[name]) return interaction.reply({ content: 'Tag not found.', flags: 64 });
       return interaction.reply({ content: tags[name], ephemeral: false });
     }
     if(sub === 'list'){
       const names = Object.keys(tags);
-      if(!names.length) return interaction.reply({ content: 'No tags.', ephemeral: true });
-      return interaction.reply({ content: names.join(', '), ephemeral: true });
+      if(!names.length) return interaction.reply({ content: 'No tags.', flags: 64 });
+      return interaction.reply({ content: names.join(', '), flags: 64 });
     }
     if(sub === 'remove'){
       const name = interaction.options.getString('name').toLowerCase();
-      if(!tags[name]) return interaction.reply({ content: 'Tag not found.', ephemeral: true });
+      if(!tags[name]) return interaction.reply({ content: 'Tag not found.', flags: 64 });
       delete tags[name];
       await writeJSON('tags.json', tags);
-      return interaction.reply({ content: 'Tag removed.', ephemeral: true });
+      return interaction.reply({ content: 'Tag removed.', flags: 64 });
     }
   }
 };

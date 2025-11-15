@@ -10,7 +10,7 @@ export default {
     if(sub === 'evaluate'){
       const expr = interaction.options.getString('expression');
       const { result, error } = safeEvaluate(expr);
-      if(error) return interaction.reply({ content: `Error: ${error}`, ephemeral: true });
+      if(error) return interaction.reply({ content: `Error: ${error}`, flags: 64 });
       return interaction.reply({ content: `${expr} = ${result}`, ephemeral: false });
     }
   }
